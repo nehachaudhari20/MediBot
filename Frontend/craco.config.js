@@ -1,11 +1,11 @@
 module.exports = {
-  style: {
-    postcss: {
-      loaderOptions: {
-        postcssOptions: {
-          plugins: [],
-        },
-      },
-    },
-  },
-};
+    style: {
+      postcss: {
+        loaderOptions: {
+          postcssOptions: {
+            plugins: []
+          }
+        }
+      }
+    }
+  };

@@ -43,16 +43,16 @@ export default function HomePage({ openAuthModal }) {
     navigate("/chat")
   }
 
-  const handleStartMedicalAdvice = () => {
+  {/*const handleStartMedicalAdvice = () => {
     navigate("/medical")
-  }
+  }*/}
 
   return (
     <div ref={vantaRef} className="home-page">
       <div className="home-content">
         <div className="logo-container">
           <h1 className="home-logo">
-            MOMA<span className="text-sky-500 font-bold"></span>
+            medi<span className="text-sky-500 font-bold">BOT</span>
           </h1>
         </div>
 
@@ -91,7 +91,17 @@ export default function HomePage({ openAuthModal }) {
           <Button onClick={handleStartChat} className="start-chat-button">
             Start Chatting
           </Button>
+          {/*<Button onClick={handleStartMedicalAdvice} className="medical-button" variant="outline">
+            Medical Advisor
+          </Button>*/}
+        </div>
 
+        <div className="home-disclaimer">
+          <p className="disclaimer-text">
+            <strong>Disclaimer:</strong> mediBOT provides general information and is not a substitute for professional
+            medical advice, diagnosis, or treatment. Always consult with a qualified healthcare provider for medical
+            concerns.
+          </p>
         </div>
 
         <div className="home-auth">
@@ -107,4 +117,3 @@ export default function HomePage({ openAuthModal }) {
     </div>
   )
 }
-

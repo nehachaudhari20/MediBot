@@ -49,7 +49,7 @@ export default function ChatInterface({ toggleSidebar, isLoggedIn, openAuthModal
       const botResponse = {
         id: Date.now() + 1,
         content:
-          "I've received your message. Please note that I can provide general medical information, but I'm not a substitute for professional medical advice. How else can I assist you?",
+          "processing...",
         sender: "bot",
       }
       setMessages((prevMessages) => [...prevMessages, botResponse])
@@ -164,8 +164,8 @@ export default function ChatInterface({ toggleSidebar, isLoggedIn, openAuthModal
         )}
 
         <Tabs value={inputMode} onValueChange={setInputMode} className="input-tabs">
-          <TabsList className="tabs-list">
-            <TabsTrigger value="text" active={inputMode === "text"}>
+          {/*<TabsList className="tabs-list">
+           <TabsTrigger value="text" active={inputMode === "text"}>
               <MessageSquare className="icon" />
               Text
             </TabsTrigger>
@@ -173,13 +173,13 @@ export default function ChatInterface({ toggleSidebar, isLoggedIn, openAuthModal
               <PaperclipIcon className="icon" />
               Media
             </TabsTrigger>
-            <TabsTrigger value="audio" active={inputMode === "audio"}>
+           <TabsTrigger value="audio" active={inputMode === "audio"}>
               <Mic className="icon" />
               Audio
             </TabsTrigger>
-          </TabsList>
+          </TabsList>*/}
 
-          <TabsContent value="text" className="tab-content">
+          {/*<TabsContent value="text" className="tab-content">
             <div className="text-input-container">
               <Textarea
                 value={inputText}
@@ -192,12 +192,12 @@ export default function ChatInterface({ toggleSidebar, isLoggedIn, openAuthModal
                 <Send className="icon" />
               </Button>
             </div>
-          </TabsContent>
+          </TabsContent>*/}
 
           <TabsContent value="media" className="tab-content">
             <div className="media-input-container">
               <div className="media-buttons">
-                <Button
+                {/*<Button
                   variant="outline"
                   onClick={() => {
                     fileInputRef.current.accept = "image/*"
@@ -206,8 +206,8 @@ export default function ChatInterface({ toggleSidebar, isLoggedIn, openAuthModal
                 >
                   <ImageIcon className="icon" />
                   Image
-                </Button>
-                <Button
+                </Button>*/}
+                {/*<Button
                   variant="outline"
                   onClick={() => {
                     fileInputRef.current.accept = "video/*"
@@ -216,7 +216,7 @@ export default function ChatInterface({ toggleSidebar, isLoggedIn, openAuthModal
                 >
                   <FileVideo className="icon" />
                   Video
-                </Button>
+                </Button>*/}
                 <Button
                   variant="outline"
                   onClick={() => {
@@ -229,7 +229,7 @@ export default function ChatInterface({ toggleSidebar, isLoggedIn, openAuthModal
                 </Button>
               </div>
               <input type="file" ref={fileInputRef} className="hidden" onChange={handleFileSelect} multiple />
-              <div className="caption-input-container">
+              {/*<div className="caption-input-container">
                 <Input
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
@@ -240,11 +240,11 @@ export default function ChatInterface({ toggleSidebar, isLoggedIn, openAuthModal
                 <Button onClick={handleSendMessage} size="icon" className="send-button">
                   <Send className="icon" />
                 </Button>
-              </div>
+              </div>*/}
             </div>
           </TabsContent>
 
-          <TabsContent value="audio" className="tab-content">
+          {/*<TabsContent value="audio" className="tab-content">
             <div className="audio-input-container">
               <div className="record-button-container">
                 <Button
@@ -264,7 +264,7 @@ export default function ChatInterface({ toggleSidebar, isLoggedIn, openAuthModal
                 </div>
               )}
             </div>
-          </TabsContent>
+          </TabsContent>*/}
         </Tabs>
       </div>
     </div>
