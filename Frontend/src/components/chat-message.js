@@ -8,13 +8,13 @@ export default function ChatMessage({ message }) {
       <div className="message-avatar">
         {sender === "user" ? (
           <Avatar>
-            <AvatarImage src="logo.png" alt="User" />
-            <AvatarFallback></AvatarFallback>
+            <AvatarImage src="/placeholder.svg?height=32&width=32" alt="User" />
+            <AvatarFallback>U</AvatarFallback>
           </Avatar>
         ) : (
           <Avatar>
             <AvatarImage src="/logo.png" alt="mediBOT" />
-            <AvatarFallback></AvatarFallback>
+            <AvatarFallback>M</AvatarFallback>
           </Avatar>
         )}
       </div>

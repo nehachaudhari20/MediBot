@@ -2,13 +2,13 @@
 
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { Button } from "../components/ui/button"
-import { Input } from "../components/ui/input"
-import { ScrollArea } from "../components/ui/scroll-area"
-import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar"
-import { Search, Plus, History, Settings, LogOut, ChevronLeft, Trash2, Home, Stethoscope } from "lucide-react"
+import { Button } from "./ui/button"
+import { Input } from "./ui/input"
+import { ScrollArea } from "./ui/scroll-area"
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
+import { Search, Plus, History, Settings, LogOut, ChevronLeft, Trash2, Home } from "lucide-react"
 
-export default function Sidebar({ isOpen, toggleSidebar, isLoggedIn, user, openAuthModal, handleLogout }) {
+export default function Sidebar({ isOpen, toggleSidebar, isLoggedIn, user, handleLogout }) {
   const [searchQuery, setSearchQuery] = useState("")
   const [conversations, setConversations] = useState([
     {
@@ -43,17 +43,12 @@ export default function Sidebar({ isOpen, toggleSidebar, isLoggedIn, user, openA
   }
 
   const startNewChat = () => {
-    // In a real app, this would create a new conversation
-    console.log("Starting new chat")
+    navigate("/chat")
   }
 
   const goToHome = () => {
     navigate("/")
   }
-
-  {/*const goToMedicalAdvisor = () => {
-    navigate("/medical")
-  }*/}
 
   if (!isOpen) return null
 
@@ -78,11 +73,6 @@ export default function Sidebar({ isOpen, toggleSidebar, isLoggedIn, user, openA
           <Plus className="icon" />
           New Chat
         </Button>
-
-        {/*<Button variant="outline" className="medical-advisor-button" onClick={goToMedicalAdvisor}>
-          <Stethoscope className="icon" />
-          Medical Advisor
-        </Button>*/}
       </div>
 
       <div className="search-container">
@@ -152,10 +142,10 @@ export default function Sidebar({ isOpen, toggleSidebar, isLoggedIn, user, openA
           </div>
         ) : (
           <div className="auth-buttons">
-            <Button variant="outline" onClick={() => openAuthModal("signin")} className="signin-button">
+            <Button variant="outline" onClick={() => navigate("/signin")} className="signin-button">
               Sign In
             </Button>
-            <Button onClick={() => openAuthModal("signup")} className="signup-button">
+            <Button onClick={() => navigate("/signup")} className="signup-button">
               Sign Up
             </Button>
           </div>

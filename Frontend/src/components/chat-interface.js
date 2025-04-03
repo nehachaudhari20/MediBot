@@ -2,21 +2,17 @@
 
 import { useState, useRef, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-import { Button } from "../components/ui/button"
-import { Input } from "../components/ui/input"
-import { Textarea } from "../components/ui/textarea"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs"
-import { Menu, MessageSquare, Mic, PaperclipIcon, Send, ImageIcon, FileVideo, File, Home } from "lucide-react"
+import { Button } from "./ui/button"
+import { Textarea } from "./ui/textarea"
+import { Menu, Send, PaperclipIcon, Home } from "lucide-react"
 import ChatMessage from "./chat-message"
 
-export default function ChatInterface({ toggleSidebar, isLoggedIn, openAuthModal }) {
+export default function ChatInterface({ toggleSidebar, isLoggedIn }) {
   const [messages, setMessages] = useState([
     { id: 1, content: "Hello! I'm mediBOT, your medical assistant. How can I help you today?", sender: "bot" },
   ])
   const [inputText, setInputText] = useState("")
-  const [isRecording, setIsRecording] = useState(false)
   const [selectedFiles, setSelectedFiles] = useState([])
-  const [inputMode, setInputMode] = useState("text")
 
   const navigate = useNavigate()
   const fileInputRef = useRef(null)
@@ -26,6 +22,33 @@ export default function ChatInterface({ toggleSidebar, isLoggedIn, openAuthModal
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }, [messages])
+
+  // Mock responses based on keywords
+  {/*const getMockResponse = (userMessage) => {
+    const lowerCaseMessage = userMessage.toLowerCase()
+
+    if (lowerCaseMessage.includes("headache") || lowerCaseMessage.includes("head pain")) {
+      return "Headaches can have many causes including stress, dehydration, lack of sleep, or underlying medical conditions. For occasional headaches, rest, hydration, and over-the-counter pain relievers may help. If you're experiencing severe or persistent headaches, please consult a healthcare professional."
+    } else if (
+      lowerCaseMessage.includes("cold") ||
+      lowerCaseMessage.includes("flu") ||
+      lowerCaseMessage.includes("fever")
+    ) {
+      return "Common cold and flu symptoms include fever, cough, sore throat, body aches, and fatigue. Rest, hydration, and over-the-counter medications can help manage symptoms. If symptoms are severe or persist for more than a week, consider consulting a healthcare provider."
+    } else if (
+      lowerCaseMessage.includes("diet") ||
+      lowerCaseMessage.includes("nutrition") ||
+      lowerCaseMessage.includes("food")
+    ) {
+      return "A balanced diet typically includes a variety of fruits, vegetables, whole grains, lean proteins, and healthy fats. It's recommended to limit processed foods, added sugars, and excessive salt. Remember that individual nutritional needs can vary based on age, activity level, and health conditions."
+    } else if (lowerCaseMessage.includes("exercise") || lowerCaseMessage.includes("workout")) {
+      return "Regular physical activity is important for overall health. Adults should aim for at least 150 minutes of moderate-intensity exercise per week, along with muscle-strengthening activities twice a week. Always start gradually and consult with a healthcare provider before beginning a new exercise program, especially if you have existing health conditions."
+    } else if (lowerCaseMessage.includes("sleep") || lowerCaseMessage.includes("insomnia")) {
+      return "Good sleep hygiene includes maintaining a regular sleep schedule, creating a restful environment, limiting screen time before bed, and avoiding caffeine and large meals close to bedtime. Adults typically need 7-9 hours of sleep per night. Persistent sleep problems should be discussed with a healthcare provider."
+    } else {
+      return "I understand you're asking about a health topic. While I can provide general information, I'm not a substitute for professional medical advice. For personalized guidance, please consult with a qualified healthcare provider. Is there something specific about this topic you'd like to know?"
+    }
+  }*/}
 
   const handleSendMessage = () => {
     if (!inputText.trim() && selectedFiles.length === 0) return
@@ -44,12 +67,11 @@ export default function ChatInterface({ toggleSidebar, isLoggedIn, openAuthModal
     setInputText("")
     setSelectedFiles([])
 
-    // Simulate bot response after a short delay
+    // Generate mock response after a short delay
     setTimeout(() => {
       const botResponse = {
         id: Date.now() + 1,
-        content:
-          "processing...",
+        content: getMockResponse(newMessage.content),
         sender: "bot",
       }
       setMessages((prevMessages) => [...prevMessages, botResponse])
@@ -83,18 +105,6 @@ export default function ChatInterface({ toggleSidebar, isLoggedIn, openAuthModal
     setSelectedFiles(newFiles)
   }
 
-  const toggleRecording = () => {
-    // In a real implementation, this would use the Web Audio API
-    setIsRecording(!isRecording)
-    if (!isRecording) {
-      // Start recording logic would go here
-      console.log("Recording started")
-    } else {
-      // Stop recording and process audio would go here
-      console.log("Recording stopped")
-    }
-  }
-
   const goToHome = () => {
     navigate("/")
   }
@@ -118,10 +128,12 @@ export default function ChatInterface({ toggleSidebar, isLoggedIn, openAuthModal
         <div className="header-right">
           {!isLoggedIn ? (
             <div className="auth-buttons">
-              <Button variant="outline" onClick={() => openAuthModal("signin")}>
+              <Button variant="outline" onClick={() => navigate("/signin")} className="signin-button">
                 Sign In
               </Button>
-              <Button onClick={() => openAuthModal("signup")}>Sign Up</Button>
+              <Button onClick={() => navigate("/signup")} className="signup-button">
+                Sign Up
+              </Button>
             </div>
           ) : (
             <div className="user-welcome">
@@ -152,7 +164,7 @@ export default function ChatInterface({ toggleSidebar, isLoggedIn, openAuthModal
                   </div>
                 ) : (
                   <div className="generic-preview">
-                    <File className="file-icon" />
+                    <div className="file-icon"></div>
                   </div>
                 )}
                 <button className="remove-file-button" onClick={() => removeFile(index)}>
@@ -163,109 +175,24 @@ export default function ChatInterface({ toggleSidebar, isLoggedIn, openAuthModal
           </div>
         )}
 
-        <Tabs value={inputMode} onValueChange={setInputMode} className="input-tabs">
-          {/*<TabsList className="tabs-list">
-           <TabsTrigger value="text" active={inputMode === "text"}>
-              <MessageSquare className="icon" />
-              Text
-            </TabsTrigger>
-            <TabsTrigger value="media" active={inputMode === "media"}>
+        <div className="text-input-container">
+          <Textarea
+            value={inputText}
+            onChange={(e) => setInputText(e.target.value)}
+            onKeyDown={handleKeyPress}
+            placeholder="Describe your symptoms or ask a medical question..."
+            className="message-textarea"
+          />
+          <div className="input-actions">
+            <Button variant="outline" size="icon" onClick={() => fileInputRef.current.click()} className="file-button">
               <PaperclipIcon className="icon" />
-              Media
-            </TabsTrigger>
-           <TabsTrigger value="audio" active={inputMode === "audio"}>
-              <Mic className="icon" />
-              Audio
-            </TabsTrigger>
-          </TabsList>*/}
-
-          {/*<TabsContent value="text" className="tab-content">
-            <div className="text-input-container">
-              <Textarea
-                value={inputText}
-                onChange={(e) => setInputText(e.target.value)}
-                onKeyDown={handleKeyPress}
-                placeholder="Describe your symptoms or ask a medical question..."
-                className="message-textarea"
-              />
-              <Button onClick={handleSendMessage} size="icon" className="send-button">
-                <Send className="icon" />
-              </Button>
-            </div>
-          </TabsContent>*/}
-
-          <TabsContent value="media" className="tab-content">
-            <div className="media-input-container">
-              <div className="media-buttons">
-                {/*<Button
-                  variant="outline"
-                  onClick={() => {
-                    fileInputRef.current.accept = "image/*"
-                    fileInputRef.current.click()
-                  }}
-                >
-                  <ImageIcon className="icon" />
-                  Image
-                </Button>*/}
-                {/*<Button
-                  variant="outline"
-                  onClick={() => {
-                    fileInputRef.current.accept = "video/*"
-                    fileInputRef.current.click()
-                  }}
-                >
-                  <FileVideo className="icon" />
-                  Video
-                </Button>*/}
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    fileInputRef.current.accept = "*"
-                    fileInputRef.current.click()
-                  }}
-                >
-                  <File className="icon" />
-                  File
-                </Button>
-              </div>
-              <input type="file" ref={fileInputRef} className="hidden" onChange={handleFileSelect} multiple />
-              {/*<div className="caption-input-container">
-                <Input
-                  value={inputText}
-                  onChange={(e) => setInputText(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
-                  placeholder="Add a description of your medical concern..."
-                  className="caption-input"
-                />
-                <Button onClick={handleSendMessage} size="icon" className="send-button">
-                  <Send className="icon" />
-                </Button>
-              </div>*/}
-            </div>
-          </TabsContent>
-
-          {/*<TabsContent value="audio" className="tab-content">
-            <div className="audio-input-container">
-              <div className="record-button-container">
-                <Button
-                  variant={isRecording ? "destructive" : "outline"}
-                  className={`record-button ${isRecording ? "recording" : ""}`}
-                  onClick={toggleRecording}
-                >
-                  <Mic className={`icon ${isRecording ? "pulse" : ""}`} />
-                </Button>
-              </div>
-              <p className="record-status">{isRecording ? "Recording... Click to stop" : "Click to start recording"}</p>
-              {isRecording && (
-                <div className="recording-indicator">
-                  <div className="recording-progress">
-                    <div className="recording-progress-bar"></div>
-                  </div>
-                </div>
-              )}
-            </div>
-          </TabsContent>*/}
-        </Tabs>
+            </Button>
+            <Button onClick={handleSendMessage} size="icon" className="send-button">
+              <Send className="icon" />
+            </Button>
+          </div>
+          <input type="file" ref={fileInputRef} className="hidden" onChange={handleFileSelect} multiple />
+        </div>
       </div>
     </div>
   )
