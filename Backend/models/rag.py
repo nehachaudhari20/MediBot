@@ -83,17 +83,14 @@ career_embeddings = {
 
 print(list(career_embeddings.values())[0][:5])
 
-# Create ChromaDB client
 chroma_client = chromadb.PersistentClient(path="./career_db")
 
-# Create collection for career guidance
 collection = chroma_client.get_or_create_collection(name="career_guidance")
 
-# Insert data into ChromaDB
 for url, text in maternity_guide.items():
     collection.add(
-        ids=[url],  # Unique ID (URL)
-        documents=[text],  # Full roadmap text
+        ids=[url],  
+        documents=[text],  
     )
 
 print("Information stored in ChromaDB!")
