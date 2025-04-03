@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="/public/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="MediBot - AI Assistant for Medical Queries"
+    />
+    <link rel="manifest" href="/public/manifest.json" />
+    <!-- <link rel="stylesheet" href="/src/styles/main.css"> -->
+    <title>MediBot - AI Assistant</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root">
+      <div class="chat-container">
+        <header class="chat-header">
+          <h1>MediBot</h1>
+          <p>Your AI Medical Assistant</p>
+        </header>
+        
+        <main class="chat-messages" id="chat-messages">
+          <!-- Messages will be inserted here -->
+        </main>
+        
+        <footer class="chat-input">
+          <form id="chat-form">
+            <input 
+              type="text" 
+              id="user-input" 
+              placeholder="Type your medical query here..."
+              autocomplete="off"
+            >
+            <button type="submit">
+              <span>Send</span>
+            </button>
+          </form>
+        </footer>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <!-- <script type="module" src="/src/lib/api.js"></script> -->
+    <script type="module" src="/src/components/chat-messages.js"></script>
+  </body>
+</html>
