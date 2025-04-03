@@ -4,10 +4,10 @@ import { useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { Button } from "./ui/button"
 import * as THREE from "three"
-import WAVES from "vanta/dist/vanta.waves.min"
+import HALO from "vanta/dist/vanta.halo.min"
 import { Heart, Stethoscope, MessageSquare } from "lucide-react"
 
-export default function HomePage({ openAuthModal }) {
+export default function HomePage() {
   const [vantaEffect, setVantaEffect] = useState(null)
   const vantaRef = useRef(null)
   const navigate = useNavigate()
@@ -15,7 +15,7 @@ export default function HomePage({ openAuthModal }) {
   useEffect(() => {
     if (!vantaEffect) {
       setVantaEffect(
-        WAVES({
+        HALO({
           el: vantaRef.current,
           THREE: THREE,
           mouseControls: true,
@@ -23,13 +23,10 @@ export default function HomePage({ openAuthModal }) {
           gyroControls: false,
           minHeight: 200.0,
           minWidth: 200.0,
-          scale: 1.0,
-          scaleMobile: 1.0,
-          color: 0x0ea5e9, // Sky blue
-          shininess: 30.0,
-          waveHeight: 15.0,
-          waveSpeed: 0.75,
-          zoom: 0.75,
+          baseColor: 0x0,
+          backgroundColor: 0x1a203d,
+          amplitudeFactor: 2.0,
+          size: 1.5,
         }),
       )
     }
@@ -43,9 +40,13 @@ export default function HomePage({ openAuthModal }) {
     navigate("/chat")
   }
 
-  {/*const handleStartMedicalAdvice = () => {
-    navigate("/medical")
-  }*/}
+  const handleSignIn = () => {
+    navigate("/signin")
+  }
+
+  const handleSignUp = () => {
+    navigate("/signup")
+  }
 
   return (
     <div ref={vantaRef} className="home-page">
@@ -91,9 +92,6 @@ export default function HomePage({ openAuthModal }) {
           <Button onClick={handleStartChat} className="start-chat-button">
             Start Chatting
           </Button>
-          {/*<Button onClick={handleStartMedicalAdvice} className="medical-button" variant="outline">
-            Medical Advisor
-          </Button>*/}
         </div>
 
         <div className="home-disclaimer">
@@ -107,10 +105,12 @@ export default function HomePage({ openAuthModal }) {
         <div className="home-auth">
           <p>Already have an account?</p>
           <div className="auth-buttons">
-            <Button variant="outline" onClick={() => openAuthModal("signin")}>
+            <Button variant="outline" onClick={handleSignIn} className="signin-button">
               Sign In
             </Button>
-            <Button onClick={() => openAuthModal("signup")}>Sign Up</Button>
+            <Button onClick={handleSignUp} className="signup-button">
+              Sign Up
+            </Button>
           </div>
         </div>
       </div>
