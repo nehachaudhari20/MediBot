@@ -51,9 +51,9 @@ export default function Sidebar({ isOpen, toggleSidebar, isLoggedIn, user, openA
     navigate("/")
   }
 
-  const goToMedicalAdvisor = () => {
+  {/*const goToMedicalAdvisor = () => {
     navigate("/medical")
-  }
+  }*/}
 
   if (!isOpen) return null
 
@@ -79,10 +79,10 @@ export default function Sidebar({ isOpen, toggleSidebar, isLoggedIn, user, openA
           New Chat
         </Button>
 
-        <Button variant="outline" className="medical-advisor-button" onClick={goToMedicalAdvisor}>
+        {/*<Button variant="outline" className="medical-advisor-button" onClick={goToMedicalAdvisor}>
           <Stethoscope className="icon" />
           Medical Advisor
-        </Button>
+        </Button>*/}
       </div>
 
       <div className="search-container">

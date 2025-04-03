@@ -6,7 +6,7 @@ import ChatInterface from "./components/chat-interface"
 import Sidebar from "./components/sidebar"
 import AuthModal from "./components/auth-modal"
 import HomePage from "./components/home-page"
-import MedicalAdvisor from "./components/medical-advisor"
+{/*import MedicalAdvisor from "./components/medical-advisor"*/}
 import { ThemeProvider } from "./components/theme-provider"
 import "./index.css"
 
@@ -62,7 +62,7 @@ function App() {
               </div>
             }
           />
-          <Route
+          {/*<Route
             path="/medical"
             element={
               <div className="flex h-full">
@@ -80,7 +80,7 @@ function App() {
                 </main>
               </div>
             }
-          />
+          />*/}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
 

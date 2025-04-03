@@ -43,9 +43,9 @@ export default function HomePage({ openAuthModal }) {
     navigate("/chat")
   }
 
-  const handleStartMedicalAdvice = () => {
+  {/*const handleStartMedicalAdvice = () => {
     navigate("/medical")
-  }
+  }*/}
 
   return (
     <div ref={vantaRef} className="home-page">
@@ -91,9 +91,9 @@ export default function HomePage({ openAuthModal }) {
           <Button onClick={handleStartChat} className="start-chat-button">
             Start Chatting
           </Button>
-          <Button onClick={handleStartMedicalAdvice} className="medical-button" variant="outline">
+          {/*<Button onClick={handleStartMedicalAdvice} className="medical-button" variant="outline">
             Medical Advisor
-          </Button>
+          </Button>*/}
         </div>
 
         <div className="home-disclaimer">
