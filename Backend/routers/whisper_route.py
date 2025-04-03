@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from models.whispher import record_and_transcribe
+from Backend.models.whispher import record_and_transcribe
 
 router = APIRouter()
 

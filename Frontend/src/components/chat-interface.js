@@ -28,10 +28,10 @@ export default function ChatInterface({ toggleSidebar, isLoggedIn }) {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  // ...existing code...
   const handleSendMessage = async () => {
     if (!inputText.trim() && selectedFiles.length === 0) return;
 
-    // Create a new message
     const newMessage = {
       id: Date.now(),
       content: inputText,
@@ -39,33 +39,28 @@ export default function ChatInterface({ toggleSidebar, isLoggedIn }) {
       files: selectedFiles.length > 0 ? selectedFiles : undefined,
     };
 
-    setMessages([...messages, newMessage]);
+    setMessages((prevMessages) => [...prevMessages, newMessage]);
 
-    // Clear input and files
-    setInputText("");
-    setSelectedFiles([]);
-    const API_BASE_URL =
-      process.env.REACT_APP_API_URL || "http://localhost:5000";
     try {
-      // Make API call to your FastAPI endpoint
-      const response = await fetch(`${API_BASE_URL}/rag_route`, {
+      const response = await fetch("http://localhost:8000/rag/query_rag/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ message: newMessage.content }),
+        body: JSON.stringify({
+          message: inputText, // Send actual input text instead of "hello"
+        }),
       });
 
       if (!response.ok) {
-        throw new Error("Failed to get a response from the chatbot.");
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
 
-      // Append chatbot's response to the messages
       const botResponse = {
         id: Date.now() + 1,
-        content: data.response, // Assuming API returns { "response": "chatbot message" }
+        content: data.response,
         sender: "bot",
       };
 
@@ -76,12 +71,17 @@ export default function ChatInterface({ toggleSidebar, isLoggedIn }) {
         ...prevMessages,
         {
           id: Date.now() + 1,
-          content: "Error: Unable to fetch response.",
+          content: "Error: Unable to fetch response. Please try again.",
           sender: "bot",
         },
       ]);
     }
+
+    // Clear input and files
+    setInputText("");
+    setSelectedFiles([]);
   };
+  // ...existing code...
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {

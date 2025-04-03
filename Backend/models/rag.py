@@ -72,7 +72,7 @@ for url in career_urls:
         text = extract_text_from_website(url)
         collection.add(ids=[url], documents=[text])
 
-genai.configure(api_key="AIzaSyCYYUDOTqdhMC_NDbrQS-htFND7vocAIes")
+genai.configure(api_key="AIzaSyDlrKlKH2GkELdceGC9LpagYmkbvJfzyck")
 
 conversation_history = []
 
