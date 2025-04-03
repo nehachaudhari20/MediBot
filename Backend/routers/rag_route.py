@@ -1,9 +1,11 @@
-from fastapi import APIRouter
-from models.rag import process_query
+from fastapi import FastAPI
+from pydantic import BaseModel
 
-router = APIRouter()
+app = FastAPI()
 
-@router.post("/query_rag/")
-def query_rag(user_query: str):
-    response = process_query(user_query)
-    return {"response": response}
+class Message(BaseModel):
+    message: str
+
+@app.post("/rag_route")
+async def chat_response(data: Message):
+    return {"response": f"You said: {data.message}"}
