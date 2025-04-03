@@ -1,0 +1,9 @@
+from fastapi import APIRouter
+from models.hospital_finder import find_nearest_hospital
+
+router = APIRouter()
+
+@router.get("/find_hospital/")
+def find_hospital(location: str):
+    hospitals = find_nearest_hospital(location)
+    return {"nearest_hospitals": hospitals}

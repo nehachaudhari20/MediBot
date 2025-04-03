@@ -24,32 +24,10 @@ export default function ChatInterface({ toggleSidebar, isLoggedIn }) {
   }, [messages])
 
   // Mock responses based on keywords
-  {/*const getMockResponse = (userMessage) => {
-    const lowerCaseMessage = userMessage.toLowerCase()
-
-    if (lowerCaseMessage.includes("headache") || lowerCaseMessage.includes("head pain")) {
-      return "Headaches can have many causes including stress, dehydration, lack of sleep, or underlying medical conditions. For occasional headaches, rest, hydration, and over-the-counter pain relievers may help. If you're experiencing severe or persistent headaches, please consult a healthcare professional."
-    } else if (
-      lowerCaseMessage.includes("cold") ||
-      lowerCaseMessage.includes("flu") ||
-      lowerCaseMessage.includes("fever")
-    ) {
-      return "Common cold and flu symptoms include fever, cough, sore throat, body aches, and fatigue. Rest, hydration, and over-the-counter medications can help manage symptoms. If symptoms are severe or persist for more than a week, consider consulting a healthcare provider."
-    } else if (
-      lowerCaseMessage.includes("diet") ||
-      lowerCaseMessage.includes("nutrition") ||
-      lowerCaseMessage.includes("food")
-    ) {
-      return "A balanced diet typically includes a variety of fruits, vegetables, whole grains, lean proteins, and healthy fats. It's recommended to limit processed foods, added sugars, and excessive salt. Remember that individual nutritional needs can vary based on age, activity level, and health conditions."
-    } else if (lowerCaseMessage.includes("exercise") || lowerCaseMessage.includes("workout")) {
-      return "Regular physical activity is important for overall health. Adults should aim for at least 150 minutes of moderate-intensity exercise per week, along with muscle-strengthening activities twice a week. Always start gradually and consult with a healthcare provider before beginning a new exercise program, especially if you have existing health conditions."
-    } else if (lowerCaseMessage.includes("sleep") || lowerCaseMessage.includes("insomnia")) {
-      return "Good sleep hygiene includes maintaining a regular sleep schedule, creating a restful environment, limiting screen time before bed, and avoiding caffeine and large meals close to bedtime. Adults typically need 7-9 hours of sleep per night. Persistent sleep problems should be discussed with a healthcare provider."
-    } else {
-      return "I understand you're asking about a health topic. While I can provide general information, I'm not a substitute for professional medical advice. For personalized guidance, please consult with a qualified healthcare provider. Is there something specific about this topic you'd like to know?"
-    }
-  }*/}
-
+const getMockResponse = (userMessage) => {
+  // Temporarily disable conditions by always returning a default response
+  return "Processing...";
+};
   const handleSendMessage = () => {
     if (!inputText.trim() && selectedFiles.length === 0) return
 

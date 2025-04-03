@@ -1,16 +1,13 @@
+from fastapi import FastAPI
+from Backend.routers import remainder_router, whisper_router, hospital_finder_router, rag_router
 
-from Backend.models import rag  # Correct import statement
+app = FastAPI()
 
-def main():
-    """
-    Main function to extract text from career roadmap URLs and display the results.
-    """
-    # Extract career roadmaps
-    maternity_guide = rag.extract_text_from_website()
+app.include_router(remainder_router.router, prefix="/reminder", tags=["Reminders"])
+app.include_router(whisper_router.router, prefix="/audio", tags=["Audio Transcription"])
+app.include_router(hospital_finder_router.router, prefix="/hospital", tags=["Hospital Finder"])
+app.include_router(rag_router.router, prefix="/rag", tags=["RAG Queries"])
 
-    # Print a sample (first 500 characters) of the extracted text for each URL
-    for url, text in maternity_guide.items():
-        print(f"\nExtracted from {url}:\n{text[:400]}...")  # Print first 500 chars
-
-if _name_ == "_main_":
-    main()
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)

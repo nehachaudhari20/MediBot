@@ -7,8 +7,8 @@
   --secondary-color: #f1f5f9;
   --border-color: #e2e8f0;
   --radius: 0.5rem;
-  --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial,
-    sans-serif;
+  --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
 * {
@@ -277,11 +277,13 @@ body,
 }
 
 .message-avatar {
-  margin: 0 0.5rem;
+  margin: 0.5rem;
+  width: 50px; /* Adjust the size as needed */
+  height: 40px; /* Adjust the size as needed */
 }
 
 .message-content {
-  max-width: 60%;
+  max-width: 80%;
   padding: 0.75rem 1rem;
   border-radius: var(--radius);
 }
@@ -936,4 +938,3 @@ body,
     max-width: 85%;
   }
 }
-

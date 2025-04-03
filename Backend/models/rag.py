@@ -2,36 +2,27 @@ import requests
 from bs4 import BeautifulSoup
 from langchain_community.embeddings import SentenceTransformerEmbeddings
 from langchain_community.vectorstores import Chroma
-import os
-import requests
 import chromadb
 from sentence_transformers import SentenceTransformer
-import nltk
-from sklearn.feature_extraction.text import TfidfVectorizer
-import networkx as nx
-import re
-
-# def extract_text_from_website(url):
-#     response = requests.get(url, headers={"User-Agent": "Mozilla/5.0"})
-#     soup = BeautifulSoup(response.text, "html.parser")
-
-#     paragraphs = soup.find_all("p")  # Extract paragraphs
-#     text = " ".join([p.get_text() for p in paragraphs])
-    
-#     return text
+import google.generativeai as genai
 
 def extract_text_from_website(url):
-    response = requests.get(url, headers={"User-Agent": "Mozilla/5.0"})
-    soup = BeautifulSoup(response.text, "html.parser")
+    try:
+        response = requests.get(url, headers={"User-Agent": "Mozilla/5.0"}, timeout=10)
+        response.raise_for_status()  
+        soup = BeautifulSoup(response.text, "html.parser")
+        paragraphs = soup.find_all("p")
+        return " ".join([p.get_text() for p in paragraphs]) if paragraphs else "No content available."
+    except requests.RequestException as e:
+        print(f"Error fetching {url}: {e}")
+        return "Error fetching content."
 
-    paragraphs = soup.find_all("p")  # Extract paragraphs
-    text = " ".join([p.get_text() for p in paragraphs])
-    
-    return text
-
-
-
+# URLs for maternity guidance
 career_urls = [
+    # maternity hopitals in pune
+    "https://www.pmc.gov.in/en/hosp-list",
+    "https://www.justdial.com/Pune/Maternity-Hospitals/nct-10314263",
+    "https://www.pmc.gov.in/en/hospital_list",
     # general
     "https://resources.healthgrades.com/right-care/pregnancy/9-months-pregnant",
     "https://nhsrcindia.org/sites/default/files/2021-12/Care%20During%20Pregnancy%20and%20Childbirth%20Training%20Manual%20for%20CHO%20at%20AB-HWC.pdf",
@@ -67,85 +58,52 @@ career_urls = [
     "https://www.nhs.uk/pregnancy/labour-and-birth/signs-of-labour/signs-that-labour-has-begun/"
 ]
 
-maternity_guide = {url: extract_text_from_website(url) for url in career_urls}
-
-
-for key, value in maternity_guide.items():
-    print(f"\nExtracted from {key}:\n{value[:500]}...")
-
-
+# Loading embedding model
 model = SentenceTransformer("all-MiniLM-L6-v2")
 
-# convert sentences into vector embeddings
-career_embeddings = {
-    url: model.encode(text) for url, text in maternity_guide.items()
-}
-
-print(list(career_embeddings.values())[0][:5])
-
-# Create ChromaDB client
+# Initializing ChromaDB
 chroma_client = chromadb.PersistentClient(path="./career_db")
-
-# Create collection for career guidance
 collection = chroma_client.get_or_create_collection(name="career_guidance")
 
-# Insert data into ChromaDB
-for url, text in maternity_guide.items():
-    collection.add(
-        ids=[url],  # Unique ID (URL)
-        documents=[text],  # Full roadmap text
-    )
-
-print("Information stored in ChromaDB!")
-
-import google.generativeai as genai
+# Storing extracted text into ChromaDB
+existing_ids = set(collection.get()["ids"])
+for url in career_urls:
+    if url not in existing_ids:
+        text = extract_text_from_website(url)
+        collection.add(ids=[url], documents=[text])
 
 genai.configure(api_key="AIzaSyCYYUDOTqdhMC_NDbrQS-htFND7vocAIes")
 
-conversation_history = []  #list to store conversation history
+conversation_history = []
 
-def get_best_career_advice(query, results, conversation_history):
-    
-    matched_texts = "\n\n".join(results['documents'][0])  # Combine multiple chunks
+def get_best_maternity_guide(query, results, conversation_history):
+    """Fetches the best response based on AI guidance and retrieved documents."""
+    if not results["documents"]:
+        return "Sorry, I couldn't find relevant information."
 
-    # add the new query and response to the conversation history
+    matched_texts = "\n\n".join(results["documents"][0])
     conversation_history.append(f"User Query: {query}")
 
-    conversation_context = "\n".join(conversation_history)  
     system_prompt = """
-    You are an expert doctor advisor for pregnancy and postpartum care.
-    You will receive extracted text from multiple sources. 
-    Your task is to:
-    - Remove redundant or irrelevant details.
-    - Generate a clear, structured step-by-step answer for the query.
-    - Format it into a useful guide.
+    You are a medical advisor specializing in pregnancy and postpartum care.
+    Based on the provided extracted text, respond with:
+    - Clear, structured, and step-by-step guidance.
+    - Medically accurate information without unnecessary details.
+    - Avoid * and use - for bullet points.
+    - Maintain a friendly and supportive tone.
+    - If there is any symptom user is facing, give detailed expliantion about how to overcome it.
+    - If the question is not related to pregnancy or any thing which you feel not at all related to pregnancy health, tell user that cannot be answered in a sweet tone.
+    - If the user asks for a specific location, provide the best available options.
+    - If the user asks for maternity hospitals, provide the best available options.
+    - If the user asks for a specific query, and if it is not in the documents provided, then answer for that on your own (only if it is related to pregnancy).
+    - If the user asks for location then provide location in the form of map link or any website where the information can be found.
     """
 
-    user_prompt = f"User Query: {query}\n\nExtracted Information:\n{matched_texts}\n\nConversation History:\n{conversation_context}"
+    user_prompt = f"User Query: {query}\n\nExtracted Information:\n{matched_texts}\n\nHistory:\n{conversation_history}"
 
     model = genai.GenerativeModel("gemini-1.5-flash")
     response = model.generate_content(system_prompt + "\n\n" + user_prompt)
-    conversation_history.append(f"AI Response: {response.text}")
-    
-    return response.text  
 
-def start_conversation():
-    print("Welcome to the Doctor! Type 'exit' to end the conversation.")
-    
-    while True:
-        user_query = input("\nAsk a question: ")
+    conversation_history.append(f"AI Response: {response.text.strip()}")
 
-        if user_query.lower() == "exit":
-            print("Goodbye!")
-            # break
-            return
-
-        # fetch matching documents from ChromaDB
-        results = collection.query(query_texts=[user_query], n_results=3)  # Fetch multiple chunks
-
-        # get advice based on the query
-        best_career_advice = get_best_career_advice(user_query, results, conversation_history)
-        
-        print("\nAI Response:", best_career_advice)
-
-start_conversation()
+    return response.text.strip()

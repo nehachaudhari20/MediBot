@@ -5,19 +5,17 @@ export default function ChatMessage({ message }) {
 
   return (
     <div className={`chat-message ${sender === "user" ? "user-message" : "bot-message"}`}>
-      <div className="message-avatar">
+      {/*<div className="message-avatar">
         {sender === "user" ? (
           <Avatar>
-            <AvatarImage src="/placeholder.svg?height=32&width=32" alt="User" />
-            <AvatarFallback>U</AvatarFallback>
+            <AvatarImage src="/logo.png" alt="User" />
           </Avatar>
         ) : (
           <Avatar>
             <AvatarImage src="/logo.png" alt="mediBOT" />
-            <AvatarFallback>M</AvatarFallback>
           </Avatar>
         )}
-      </div>
+      </div>*/}
 
       <div className="message-content">
         {files && files.length > 0 && (
