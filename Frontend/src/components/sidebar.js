@@ -1,15 +1,29 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useNavigate } from "react-router-dom"
-import { Button } from "./ui/button"
-import { Input } from "./ui/input"
-import { ScrollArea } from "./ui/scroll-area"
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
-import { Search, Plus, History, Settings, LogOut, ChevronLeft, Trash2, Home } from "lucide-react"
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { ScrollArea } from "./ui/scroll-area";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import {
+  Search,
+  Plus,
+  History,
+  Settings,
+  LogOut,
+  ChevronLeft,
+  Trash2,
+} from "lucide-react";
 
-export default function Sidebar({ isOpen, toggleSidebar, isLoggedIn, user, handleLogout }) {
-  const [searchQuery, setSearchQuery] = useState("")
+export default function Sidebar({
+  isOpen,
+  toggleSidebar,
+  isLoggedIn,
+  user,
+  handleLogout,
+}) {
+  const [searchQuery, setSearchQuery] = useState("");
   const [conversations, setConversations] = useState([
     {
       id: 1,
@@ -29,40 +43,41 @@ export default function Sidebar({ isOpen, toggleSidebar, isLoggedIn, user, handl
       date: "2 days ago",
       preview: "Can you recommend a balanced diet for someone with diabetes?",
     },
-  ])
+  ]);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const filteredConversations = conversations.filter((conv) =>
-    conv.title.toLowerCase().includes(searchQuery.toLowerCase()),
-  )
+    conv.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const deleteConversation = (id, e) => {
-    e.stopPropagation()
-    setConversations(conversations.filter((conv) => conv.id !== id))
-  }
+    e.stopPropagation();
+    setConversations(conversations.filter((conv) => conv.id !== id));
+  };
 
   const startNewChat = () => {
-    navigate("/chat")
-  }
+    navigate("/chat");
+  };
 
-  const goToHome = () => {
-    navigate("/")
-  }
-
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
   return (
     <div className="sidebar">
       <div className="sidebar-header">
-        <h2 className="sidebar-title">
-          medi<span className="text-sky-500 font-bold">BOT</span>
-        </h2>
+        <div className="sidebar-logo">
+          <img src="/logo.png" alt="mediBOT Logo" className="logo-image" />
+          <h2 className="sidebar-title">
+            medi<span className="text-sky-500 font-bold">BOT</span>
+          </h2>
+        </div>
         <div className="sidebar-actions">
-          <Button variant="ghost" size="icon" onClick={goToHome} className="home-button">
-            <Home className="icon" />
-          </Button>
-          <Button variant="ghost" size="icon" onClick={toggleSidebar} className="close-sidebar-button">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleSidebar}
+            className="close-sidebar-button"
+          >
             <ChevronLeft className="icon" />
           </Button>
         </div>
@@ -123,35 +138,39 @@ export default function Sidebar({ isOpen, toggleSidebar, isLoggedIn, user, handl
           <div className="user-profile">
             <div className="user-avatar">
               <Avatar>
-                <AvatarImage src="/placeholder.svg?height=32&width=32" alt="User" />
+                <AvatarImage
+                  src="/placeholder.svg?height=32&width=32"
+                  alt="User"
+                />
                 <AvatarFallback>U</AvatarFallback>
               </Avatar>
               <div className="user-info">
                 <p className="user-name">{user?.name || "User"}</p>
-                <p className="user-email">{user?.email || "user@example.com"}</p>
+                <p className="user-email">
+                  {user?.email || "user@example.com"}
+                </p>
               </div>
             </div>
             <div className="user-actions">
               <Button variant="ghost" size="icon" className="settings-button">
                 <Settings className="icon" />
               </Button>
-              <Button variant="ghost" size="icon" onClick={handleLogout} className="logout-button">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleLogout}
+                className="logout-button"
+              >
                 <LogOut className="icon" />
               </Button>
             </div>
           </div>
         ) : (
-          <div className="auth-buttons">
-            <Button variant="outline" onClick={() => navigate("/signin")} className="signin-button">
-              Sign In
-            </Button>
-            <Button onClick={() => navigate("/signup")} className="signup-button">
-              Sign Up
-            </Button>
+          <div className="sidebar-info">
+            <p>mediBOT - Your medical assistant</p>
           </div>
         )}
       </div>
     </div>
-  )
+  );
 }
-

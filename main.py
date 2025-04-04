@@ -20,7 +20,7 @@ async def root():
     return RedirectResponse(url="/docs")
 
 app.include_router(reminder_route.router, prefix="/reminder", tags=["Reminders"])
-app.include_router(whisper_route.router, prefix="/audio", tags=["Audio Transcription"])
+app.include_router(whisper_route.router, prefix="/api/transcribe", tags=["Audio Transcription"])
 app.include_router(hospital_route.router, prefix="/hospital", tags=["Hospital Finder"])
 app.include_router(rag_route.router, prefix="/rag", tags=["RAG Queries"])
 

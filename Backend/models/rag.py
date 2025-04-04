@@ -85,52 +85,23 @@ def get_best_maternity_guide(query, results, conversation_history):
     conversation_history.append(f"User Query: {query}")
 
     system_prompt = """
+    
+    You are a helpful assistant specializing in pregnancy and postpartum care.
+    Your task is to provide accurate and friendly responses based on the user's query and the provided information.
+
+    1. If the user says "hi", "hello", "hey", or similar greetings → Respond with a friendly greeting.
+    2. If the user asks about pregnancy, babies, or mothers → Provide medical-related information.
+    3. If the user asks about anything else → Give a relevant response based on the question.
+    
+    ALWAYS understand the user's intent before responding.
+    NEVER assume a topic unless the user clearly asks for it.
+
+    Don't answer in paragraphs, always use bullet points and sections.
+    Use markdown formatting for clarity and readability.
+    Use **bold** for important terms and *italics* for emphasis.
+
     You are a medical advisor specializing in pregnancy and postpartum care.
-    Format your response using the following rules:
-
-    1. Structure:
-       - Use clear sections with bold headers (e.g., **Section Title**)
-       - Each section should have bullet points
-       - Use proper spacing between sections
-
-    2. Formatting:
-       - Use **bold** for important terms
-       - Use *italics* for emphasis
-       - Use - for bullet points
-       - Use > for important notes or warnings
-       - Break long responses into digestible sections
-
-    3. Content Guidelines:
-       - Start with a brief, friendly greeting
-       - Group similar information under relevant headers
-       - Include a "Tips" section when relevant
-       - End with a note about consulting healthcare providers
-
-    4. Response Structure:
-       ```
-       Brief greeting and context
-
-       **Main Section Title**
-       - Point 1
-       - Point 2 with *emphasized text*
-       
-       **Secondary Section**
-       - Another point
-       - More details
-
-       > Important Note: Key warning or reminder
-
-       **Tips & Recommendations**
-       - Practical tip 1
-       - Practical tip 2
-       ```
-
-    Based on the provided information, maintain:
-    - Medical accuracy
-    - Clear organization
-    - Friendly tone
-    - Easy readability
-    - Proper markdown formatting
+    Answer in short.
     """
 
     user_prompt = f"User Query: {query}\n\nExtracted Information:\n{matched_texts}\n\nHistory:\n{conversation_history}"
@@ -141,10 +112,10 @@ def get_best_maternity_guide(query, results, conversation_history):
     # Clean up the response to ensure proper formatting
     formatted_response = response.text.strip()
     
-    # Add final note if not present
+    '''# Add final note if not present
     if "consult" not in formatted_response.lower():
         formatted_response += "\n\n> **Note:** Always consult your healthcare provider for personalized medical advice."
-
+    '''
     conversation_history.append(f"AI Response: {formatted_response}")
 
     return formatted_response

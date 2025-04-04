@@ -53,7 +53,7 @@ export default function HomePage() {
       <div className="home-content">
         <div className="logo-container">
           <h1 className="home-logo">
-            medi<span className="text-sky-500 font-bold">BOT</span>
+            Dr.<span className="text-sky-500 font-bold"> MAMA</span>
           </h1>
         </div>
 
@@ -92,14 +92,6 @@ export default function HomePage() {
           <Button onClick={handleStartChat} className="start-chat-button">
             Start Chatting
           </Button>
-        </div>
-
-        <div className="home-disclaimer">
-          <p className="disclaimer-text">
-            <strong>Disclaimer:</strong> mediBOT provides general information and is not a substitute for professional
-            medical advice, diagnosis, or treatment. Always consult with a qualified healthcare provider for medical
-            concerns.
-          </p>
         </div>
 
         <div className="home-auth">
