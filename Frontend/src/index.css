@@ -936,7 +936,7 @@ body,
 .auth-submit-button {
   padding: 0.75rem;
   background-color: var(--primary-color);
-  color: white;
+  color: rgb(62, 20, 131);
   border: none;
   border-radius: 2rem;
   font-weight: 500;
@@ -945,6 +945,7 @@ body,
 }
 
 .auth-submit-button:hover {
+  color: #ffffff;
   background-color: var(--primary-hover-color);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(14, 165, 233, 0.4);
@@ -1132,4 +1133,49 @@ body,
 
 .message-text li {
   margin-bottom: 5px;
+}
+
+.speech-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-left: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.speech-button .icon {
+  width: 20px;
+  height: 20px;
+  color: #007bff;
+}
+
+.speech-button:hover .icon {
+  color: #0056b3;
+}
+
+.conversation-item {
+  cursor: pointer;
+  transition: background-color 0.2s;
+  padding: 1rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.conversation-item:hover {
+  background-color: var(--accent-color-light);
+}
+
+.conversation-preview {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.conversation-date {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
 }

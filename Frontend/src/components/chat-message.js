@@ -1,4 +1,7 @@
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { useState } from "react";
+import { Play, Pause } from "lucide-react";
+
 function formatMessage(content) {
   // Convert new lines to <br>, and lists to proper HTML
   return content
@@ -10,7 +13,20 @@ function formatMessage(content) {
 }
 
 export default function ChatMessage({ message }) {
-  const { content, sender, files } = message
+  const { content, sender, files } = message;
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const toggleSpeech = () => {
+    if (isPlaying) {
+      window.speechSynthesis.cancel();
+      setIsPlaying(false);
+    } else {
+      const utterance = new SpeechSynthesisUtterance(content);
+      utterance.onend = () => setIsPlaying(false);
+      window.speechSynthesis.speak(utterance);
+      setIsPlaying(true);
+    }
+  };
 
   return (
     <div
@@ -63,8 +79,16 @@ export default function ChatMessage({ message }) {
           className="message-text"
           dangerouslySetInnerHTML={{ __html: formatMessage(content) }}
         ></div>
+        {sender === "bot" && (
+          <button
+            onClick={toggleSpeech}
+            className="speech-button"
+            aria-label={isPlaying ? "Pause" : "Play"}
+          >
+            {isPlaying ? <Pause className="icon" /> : <Play className="icon" />}
+          </button>
+        )}
       </div>
     </div>
   );
 }
-

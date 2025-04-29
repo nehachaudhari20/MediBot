@@ -271,21 +271,30 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
 import { Menu, Send, PaperclipIcon, Home, Mic } from "lucide-react";
 import ChatMessage from "./chat-message";
+import Sidebar from "./sidebar";
+
 
 export default function ChatInterface({ toggleSidebar, isLoggedIn }) {
-  const [messages, setMessages] = useState([
-    {
-      id: 1,
-      content:
-        "Hello! I'm mediBOT, your medical assistant. How can I help you today?",
-      sender: "bot",
-    },
-  ]);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [messages, setMessages] = useState(() => {
+    // Check for passed state from history
+    const location = useLocation();
+    return (
+      location.state?.messages || [
+        {
+          id: 1,
+          content:
+            "Hello!! I'm Dr MAMA, your medical assistant. How can I help you?",
+          sender: "bot",
+        },
+      ]
+    );
+  });
   const [inputText, setInputText] = useState("");
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [isRecording, setIsRecording] = useState(false);
@@ -378,13 +387,23 @@ export default function ChatInterface({ toggleSidebar, isLoggedIn }) {
     setSelectedFiles(newFiles);
   };
 
+  // Update the toggleRecording function
   const toggleRecording = async () => {
     if (!isRecording) {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({
-          audio: true,
+          audio: {
+            channelCount: 1,
+            sampleRate: 16000,
+            echoCancellation: true,
+            noiseSuppression: true,
+          },
         });
-        const mediaRecorder = new MediaRecorder(stream);
+
+        const mediaRecorder = new MediaRecorder(stream, {
+          mimeType: "audio/webm;codecs=opus",
+        });
+
         mediaRecorderRef.current = mediaRecorder;
         audioChunksRef.current = [];
 
@@ -395,38 +414,68 @@ export default function ChatInterface({ toggleSidebar, isLoggedIn }) {
         };
 
         mediaRecorder.onstop = async () => {
-          const audioBlob = new Blob(audioChunksRef.current, {
-            type: "audio/wav",
-          });
-          const formData = new FormData();
-          formData.append("file", audioBlob, "recording.wav");
-
           try {
-            const response = await fetch("http://127.0.0.1:8000/transcribe/", {
-              method: "POST",
-              body: formData,
+            const audioBlob = new Blob(audioChunksRef.current, {
+              type: "audio/webm;codecs=opus",
             });
 
+            const formData = new FormData();
+            formData.append("file", audioBlob, "recording.webm");
+
+            const response = await fetch(
+              "http://localhost:8000/api/speech/record/",
+              {
+                method: "POST",
+                body: formData,
+              }
+            );
+
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
             const data = await response.json();
-            setInputText(data.transcription || "No speech detected.");
+
+            if (
+              data.transcription &&
+              data.transcription !== "No speech detected"
+            ) {
+              setInputText(data.transcription);
+              // Automatically send message after transcription
+              handleSendMessage();
+            } else {
+              console.warn("No speech detected");
+            }
           } catch (error) {
-            console.error("Error sending audio:", error);
+            console.error("Error processing audio:", error);
+            alert("Failed to process speech. Please try again.");
+          } finally {
+            // Cleanup
+            stream.getTracks().forEach((track) => track.stop());
           }
         };
 
         mediaRecorder.start();
         setIsRecording(true);
 
+        // Stop recording after 5 seconds
         setTimeout(() => {
-          mediaRecorder.stop();
-          setIsRecording(false);
+          if (mediaRecorderRef.current?.state === "recording") {
+            mediaRecorderRef.current.stop();
+            setIsRecording(false);
+          }
         }, 5000);
       } catch (error) {
         console.error("Microphone access error:", error);
+        alert("Could not access microphone. Please check permissions.");
+        setIsRecording(false);
       }
     } else {
+      // Stop recording if already recording
+      if (mediaRecorderRef.current?.state === "recording") {
+        mediaRecorderRef.current.stop();
+      }
       setIsRecording(false);
-      mediaRecorderRef.current?.stop();
     }
   };
 
@@ -436,6 +485,12 @@ export default function ChatInterface({ toggleSidebar, isLoggedIn }) {
 
   return (
     <div className="chat-interface">
+      <Sidebar
+        isOpen={isSidebarOpen}
+        toggleSidebar={toggleSidebar}
+        isLoggedIn={isLoggedIn}
+        currentChat={{ messages }} // Pass current chat
+      />
       <header className="chat-header">
         <div className="header-left">
           <Button
@@ -447,7 +502,7 @@ export default function ChatInterface({ toggleSidebar, isLoggedIn }) {
             <Menu className="icon" />
           </Button>
           <h1 className="app-title">
-            medi<span className="text-sky-500 font-bold">BOT</span>
+            Dr.<span className="text-sky-500 font-bold"> MAMA</span>
           </h1>
           <Button
             variant="ghost"

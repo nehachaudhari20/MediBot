@@ -27,22 +27,16 @@ export default function Sidebar({
   const [conversations, setConversations] = useState([
     {
       id: 1,
-      title: "Getting started with mediBOT",
+      title: "HISTORY 1",
       date: "2 hours ago",
-      preview: "Hello! I'm mediBOT, your medical assistant...",
+      preview: "ABC",
     },
     {
       id: 2,
-      title: "Headache symptoms",
+      title: "HISTORY 2",
       date: "Yesterday",
-      preview: "I've been experiencing headaches for the past few days...",
-    },
-    {
-      id: 3,
-      title: "Nutrition advice",
-      date: "2 days ago",
-      preview: "Can you recommend a balanced diet for someone with diabetes?",
-    },
+      preview: "XYZ",
+    }
   ]);
 
   const navigate = useNavigate();
@@ -68,7 +62,7 @@ export default function Sidebar({
         <div className="sidebar-logo">
           <img src="/logo.png" alt="mediBOT Logo" className="logo-image" />
           <h2 className="sidebar-title">
-            medi<span className="text-sky-500 font-bold">BOT</span>
+            Dr.<span className="text-sky-500 font-bold"> MAMA</span>
           </h2>
         </div>
         <div className="sidebar-actions">
@@ -137,13 +131,6 @@ export default function Sidebar({
         {isLoggedIn ? (
           <div className="user-profile">
             <div className="user-avatar">
-              <Avatar>
-                <AvatarImage
-                  src="/placeholder.svg?height=32&width=32"
-                  alt="User"
-                />
-                <AvatarFallback>U</AvatarFallback>
-              </Avatar>
               <div className="user-info">
                 <p className="user-name">{user?.name || "User"}</p>
                 <p className="user-email">
@@ -167,7 +154,7 @@ export default function Sidebar({
           </div>
         ) : (
           <div className="sidebar-info">
-            <p>mediBOT - Your medical assistant</p>
+            <p>Dr MAMA - Your medical assistant</p>
           </div>
         )}
       </div>

@@ -91,17 +91,6 @@ export default function SignIn({ onLogin }) {
           <span className="divider-text">OR</span>
         </div>
 
-        <div className="social-auth">
-          <Button variant="outline" className="social-button google-button">
-            <img src="/placeholder.svg?height=20&width=20" alt="Google" className="social-icon" />
-            Sign in with Google
-          </Button>
-
-          <Button variant="outline" className="social-button apple-button">
-            <img src="/placeholder.svg?height=20&width=20" alt="Apple" className="social-icon" />
-            Sign in with Apple
-          </Button>
-        </div>
 
         <div className="auth-footer">
           <p>

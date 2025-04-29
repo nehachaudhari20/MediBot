@@ -6,6 +6,7 @@ import chromadb
 from sentence_transformers import SentenceTransformer
 import google.generativeai as genai
 
+
 def extract_text_from_website(url):
     try:
         response = requests.get(url, headers={"User-Agent": "Mozilla/5.0"}, timeout=10)
@@ -58,14 +59,13 @@ career_urls = [
     "https://www.nhs.uk/pregnancy/labour-and-birth/signs-of-labour/signs-that-labour-has-begun/"
 ]
 
-# Loading embedding model
+#loading embedding model
 model = SentenceTransformer("all-MiniLM-L6-v2")
 
-# Initializing ChromaDB
 chroma_client = chromadb.PersistentClient(path="./career_db")
 collection = chroma_client.get_or_create_collection(name="career_guidance")
 
-# Storing extracted text into ChromaDB
+#ChromaDB
 existing_ids = set(collection.get()["ids"])
 for url in career_urls:
     if url not in existing_ids:
@@ -101,7 +101,7 @@ def get_best_maternity_guide(query, results, conversation_history):
     Use **bold** for important terms and *italics* for emphasis.
 
     You are a medical advisor specializing in pregnancy and postpartum care.
-    Answer in short.
+    Answer in short, concise, summarize and precise sentences.
     """
 
     user_prompt = f"User Query: {query}\n\nExtracted Information:\n{matched_texts}\n\nHistory:\n{conversation_history}"
