@@ -28,10 +28,9 @@ export default function SignUp({ onLogin }) {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validate passwords match
     if (formData.password !== formData.confirmPassword) {
       setPasswordError("Passwords do not match");
       return;
@@ -39,16 +38,30 @@ export default function SignUp({ onLogin }) {
 
     setIsLoading(true);
 
-    // Simulate API call
-    setTimeout(() => {
-      onLogin({
-        name: formData.name,
-        email: formData.email,
+    try {
+      const response = await fetch("http://localhost:8000/api/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+        }),
       });
-      setIsLoading(false);
+
+      if (!response.ok) throw new Error("Signup failed");
+
+      const user = await response.json();
+      onLogin(user);
       navigate("/chat");
-    }, 1000);
+    } catch (error) {
+      console.error("Signup error:", error);
+      // Optionally display error to user
+    } finally {
+      setIsLoading(false);
+    }
   };
+  
 
   return (
     <div className="auth-page">

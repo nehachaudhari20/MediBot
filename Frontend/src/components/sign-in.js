@@ -20,20 +20,30 @@ export default function SignIn({ onLogin }) {
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    setIsLoading(true)
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
 
-    // Simulate API call
-    setTimeout(() => {
-      onLogin({
-        name: "User",
-        email: formData.email,
-      })
-      setIsLoading(false)
-      navigate("/chat")
-    }, 1000)
-  }
+    try {
+      const response = await fetch("http://localhost:8000/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) throw new Error("Login failed");
+
+      const user = await response.json();
+      onLogin(user);
+      navigate("/chat");
+    } catch (error) {
+      console.error("Login error:", error);
+      // Optionally show error message to user
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
 
   return (
     <div className="auth-page">
