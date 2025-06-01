@@ -134,3 +134,11 @@ apscheduler
 SpeechRecognition
 openai-whisper
 pydantic
+python-multipart    
+langchain_community
+chromadb
+google-generativeai
+sentence-transformers
+pymongo
+passlib
+pydantic[email]
