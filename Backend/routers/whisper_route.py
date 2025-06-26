@@ -1,5 +1,5 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException
-from Backend.models.whisper import transcribe_audio
+from ..models.whisper import transcribe_audio
 import tempfile
 import os
 import logging

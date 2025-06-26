@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from Backend.models.remainder import schedule_email
+from ..models.remainder import schedule_email
 
 router = APIRouter()
 
